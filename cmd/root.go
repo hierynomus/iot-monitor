@@ -16,13 +16,13 @@ const (
 	VerboseFlagShort = "v"
 )
 
-func RootCommand(cfg interface{}) *cobra.Command {
+func RootCommand(cfg interface{}, name, description string) *cobra.Command {
 	var verbosity int
 
 	cmd := &cobra.Command{
-		Use:   "iot-monitor",
-		Short: "P1 Monitor",
-		Long:  "P1 Monitor",
+		Use:   name,
+		Short: description,
+		Long:  description,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return cmd.Usage()
 		},
@@ -40,7 +40,7 @@ func RootCommand(cfg interface{}) *cobra.Command {
 			vp := viper.New()
 			vp.SetConfigName("config")
 			vp.AddConfigPath(".")
-			vp.AddConfigPath("/etc/iot-monitor")
+			vp.AddConfigPath(fmt.Sprintf("/etc/%s", name))
 			vp.SetConfigType("yaml")
 
 			logger := log.Ctx(cmd.Context())
@@ -57,7 +57,7 @@ func RootCommand(cfg interface{}) *cobra.Command {
 
 			binder := &autobind.Autobinder{
 				UseNesting:   true,
-				EnvPrefix:    "K2P",
+				EnvPrefix:    "IOT",
 				ConfigObject: cfg,
 				Viper:        vp,
 				SetDefaults:  true,

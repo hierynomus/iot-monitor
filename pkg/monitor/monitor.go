@@ -10,22 +10,20 @@ import (
 	"github.com/hierynomus/iot-monitor/internal/prometheus"
 	"github.com/hierynomus/iot-monitor/internal/updater"
 	"github.com/hierynomus/iot-monitor/pkg/config"
-	"github.com/hierynomus/iot-monitor/pkg/converter"
-	"github.com/hierynomus/iot-monitor/pkg/exporter"
+	"github.com/hierynomus/iot-monitor/pkg/iot"
 	"github.com/hierynomus/iot-monitor/pkg/logging"
-	"github.com/hierynomus/iot-monitor/pkg/scraper"
 	"github.com/ztrue/shutdown"
 )
 
 type Monitor struct {
-	config    config.MonitorConfig
-	scraper   scraper.Scraper
+	cfg       config.MonitorConfig
+	scraper   iot.Scraper
 	server    *http.Server
 	updater   *updater.Updater
 	WaitGroup *sync.WaitGroup
 }
 
-func NewMonitor(ctx context.Context, config config.MonitorConfig, scraper scraper.Scraper, provider exporter.MetricProvider, converter converter.Converter) (*Monitor, error) {
+func NewMonitor(ctx context.Context, config config.MonitorConfig, scraper iot.Scraper, provider iot.MetricProvider, converter iot.Converter) (*Monitor, error) {
 	collector := prometheus.NewCollector(provider)
 
 	server := http.NewServer(ctx, config.HTTP())
@@ -42,7 +40,7 @@ func NewMonitor(ctx context.Context, config config.MonitorConfig, scraper scrape
 	updater := updater.NewUpdater(scraper.Output(), handler, collector, converter)
 
 	return &Monitor{
-		config:    config,
+		cfg:       config,
 		scraper:   scraper,
 		updater:   updater,
 		server:    server,

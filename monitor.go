@@ -8,8 +8,8 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func StartMonitor(ctx context.Context, config interface{}, monitorStarter func() (*monitor.Monitor, error)) error {
-	c := cmd.RootCommand(config)
+func StartMonitor(ctx context.Context, name, description string, config interface{}, monitorStarter func() (*monitor.Monitor, error)) error {
+	c := cmd.RootCommand(config, name, description)
 	c.AddCommand(cmd.StartCommand(monitorStarter))
 
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)

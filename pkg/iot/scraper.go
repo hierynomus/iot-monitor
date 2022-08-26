@@ -1,4 +1,4 @@
-package scraper
+package iot
 
 import (
 	"context"

@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/hierynomus/iot-monitor/pkg/exporter"
+	"github.com/hierynomus/iot-monitor/pkg/iot"
 	"github.com/hierynomus/iot-monitor/pkg/logging"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -14,11 +14,11 @@ var _ prometheus.Collector = (*Collector)(nil)
 
 type Collector struct {
 	lock    sync.RWMutex
-	metrics map[string]exporter.MetricCollector
+	metrics map[string]iot.MetricCollector
 }
 
 // NewCollector returns a new Collector.
-func NewCollector(provider exporter.MetricProvider) *Collector {
+func NewCollector(provider iot.MetricProvider) *Collector {
 	return &Collector{
 		metrics: provider.Metrics(),
 	}
@@ -33,7 +33,7 @@ func (c *Collector) RegisterMetrics(ctx context.Context, reg prometheus.Register
 	return nil
 }
 
-func (c *Collector) Update(msg exporter.MetricMessage) {
+func (c *Collector) Update(msg iot.MetricMessage) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	logger := logging.LoggerFor(context.Background(), "prometheus-collector")

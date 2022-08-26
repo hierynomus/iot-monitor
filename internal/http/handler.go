@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/hierynomus/iot-monitor/pkg/iot"
 	"github.com/hierynomus/iot-monitor/pkg/logging"
-	"github.com/hierynomus/iot-monitor/pkg/scraper"
 )
 
 var _ http.Handler = (*RawMessageHandler)(nil)
@@ -17,7 +17,7 @@ type RawMessageHandler struct {
 	ctx            context.Context
 	mutex          sync.RWMutex
 	LastUpdateTime time.Time
-	RawMessage     scraper.RawMessage
+	RawMessage     iot.RawMessage
 	ContentType    string
 }
 
@@ -28,7 +28,7 @@ func NewRawMessageHandler(ctx context.Context, contentType string) *RawMessageHa
 	}
 }
 
-func (h *RawMessageHandler) Update(msg scraper.RawMessage) {
+func (h *RawMessageHandler) Update(msg iot.RawMessage) {
 	h.mutex.Lock()
 	defer h.mutex.Unlock()
 	h.RawMessage = msg

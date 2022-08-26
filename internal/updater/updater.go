@@ -6,23 +6,22 @@ import (
 
 	"github.com/hierynomus/iot-monitor/internal/http"
 	"github.com/hierynomus/iot-monitor/internal/prometheus"
-	"github.com/hierynomus/iot-monitor/pkg/converter"
+	"github.com/hierynomus/iot-monitor/pkg/iot"
 	"github.com/hierynomus/iot-monitor/pkg/logging"
 	"github.com/hierynomus/iot-monitor/pkg/process"
-	"github.com/hierynomus/iot-monitor/pkg/scraper"
 )
 
 var _ process.Process = (*Updater)(nil)
 
 type Updater struct {
 	wg        *sync.WaitGroup
-	ch        <-chan scraper.RawMessage
+	ch        <-chan iot.RawMessage
 	handler   *http.RawMessageHandler
 	collector *prometheus.Collector
-	converter converter.Converter
+	converter iot.Converter
 }
 
-func NewUpdater(ch <-chan scraper.RawMessage, handler *http.RawMessageHandler, collector *prometheus.Collector, converter converter.Converter) *Updater {
+func NewUpdater(ch <-chan iot.RawMessage, handler *http.RawMessageHandler, collector *prometheus.Collector, converter iot.Converter) *Updater {
 	return &Updater{
 		wg:        &sync.WaitGroup{},
 		ch:        ch,

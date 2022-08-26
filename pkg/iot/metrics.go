@@ -1,4 +1,4 @@
-package exporter
+package iot
 
 import "github.com/prometheus/client_golang/prometheus"
 
