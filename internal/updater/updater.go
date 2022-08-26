@@ -27,6 +27,7 @@ func NewUpdater(ch <-chan scraper.RawMessage, handler *http.RawMessageHandler, c
 		wg:        &sync.WaitGroup{},
 		ch:        ch,
 		handler:   handler,
+		converter: converter,
 		collector: collector,
 	}
 }
