@@ -4,16 +4,13 @@ import (
 	"context"
 
 	"github.com/hierynomus/iot-monitor/cmd"
-	"github.com/hierynomus/iot-monitor/pkg/config"
-	"github.com/hierynomus/iot-monitor/pkg/exporter"
-	"github.com/hierynomus/iot-monitor/pkg/scraper"
+	"github.com/hierynomus/iot-monitor/pkg/monitor"
 	"github.com/rs/zerolog"
 )
 
-func StartMonitor(ctx context.Context, scraper scraper.Scraper, provider exporter.MetricProvider) error {
-	cfg := &config.Config{}
-	c := cmd.RootCommand(cfg)
-	c.AddCommand(cmd.StartCommand(cfg, scraper, provider))
+func StartMonitor(ctx context.Context, config interface{}, monitorStarter func() (*monitor.Monitor, error)) error {
+	c := cmd.RootCommand(config)
+	c.AddCommand(cmd.StartCommand(monitorStarter))
 
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 

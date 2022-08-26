@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/hierynomus/autobind"
-	"github.com/hierynomus/iot-monitor/pkg/config"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -17,7 +16,7 @@ const (
 	VerboseFlagShort = "v"
 )
 
-func RootCommand(cfg *config.Config) *cobra.Command {
+func RootCommand(cfg interface{}) *cobra.Command {
 	var verbosity int
 
 	cmd := &cobra.Command{

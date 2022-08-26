@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/hierynomus/iot-monitor/pkg/config"
 	"github.com/hierynomus/iot-monitor/pkg/logging"
 	"github.com/hierynomus/iot-monitor/pkg/process"
 )
@@ -14,13 +15,13 @@ var _ process.Process = (*Server)(nil)
 
 type Server struct {
 	ctx       context.Context
-	config    Config
+	config    config.HTTPConfig
 	WaitGroup *sync.WaitGroup
 	srv       *http.Server
 	handlers  map[string]http.Handler
 }
 
-func NewServer(ctx context.Context, c Config) *Server {
+func NewServer(ctx context.Context, c config.HTTPConfig) *Server {
 	return &Server{
 		ctx:       ctx,
 		config:    c,
@@ -52,9 +53,8 @@ func (s *Server) Stop() error {
 	return s.srv.Shutdown(s.ctx)
 }
 
-func (s *Server) Wait() error {
+func (s *Server) Wait() {
 	s.WaitGroup.Wait()
-	return nil
 }
 
 func (s *Server) run(_ context.Context) {

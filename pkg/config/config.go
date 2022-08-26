@@ -1,11 +1,15 @@
 package config
 
 import (
-	"github.com/hierynomus/iot-monitor/pkg/http"
-	"github.com/hierynomus/iot-monitor/pkg/scraper"
+	"time"
 )
 
-type Config struct {
-	Scraper scraper.Config `yaml:"scraper" viper:"serial"`
-	HTTP    http.Config    `yaml:"http" viper:"http"`
+type HTTPConfig struct {
+	ListenAddress string        `yaml:"listen-address" viper:"listen-address" env:"LISTEN_ADDRESS" default:":8080"`
+	Timeout       time.Duration `yaml:"timeout" viper:"timeout" env:"TIMEOUT" default:"30s"`
+}
+
+type MonitorConfig interface {
+	HTTP() HTTPConfig
+	RawMessageContentType() string
 }

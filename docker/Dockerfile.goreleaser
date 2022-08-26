@@ -1,3 +1,0 @@
-FROM gcr.io/distroless/static-debian11
-ENTRYPOINT ["/usr/bin/iot-monitor"]
-COPY iot-monitor /usr/bin/iot-monitor

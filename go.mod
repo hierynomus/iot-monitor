@@ -23,7 +23,6 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
-	github.com/roaldnefs/go-dsmr v0.0.0-20210207145743-27f646a51a10
 	github.com/rs/zerolog v1.27.0
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
