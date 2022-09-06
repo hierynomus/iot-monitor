@@ -34,12 +34,26 @@ func (c *smartCounter) Inc() {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
+	if c.value == nil {
+		v := float64(1)
+		c.value = &v
+	} else {
+		*c.value++
+	}
+
 	c.counter.Inc()
 }
 
 func (c *smartCounter) Add(delta float64) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
+
+	if c.value == nil {
+		v := delta
+		c.value = &v
+	} else {
+		*c.value += delta
+	}
 
 	c.counter.Add(delta)
 }
@@ -50,17 +64,14 @@ func (c *smartCounter) Set(value float64) {
 
 	if c.value == nil {
 		c.counter.Add(value)
-		v := &value
-		c.value = v
+		c.value = &value
 	} else {
 		delta := value - *c.value
 		if delta > 0 {
 			c.counter.Add(delta)
 			c.value = &value
 		}
-
 	}
-
 }
 
 func (c *smartCounter) Collect(ch chan<- prometheus.Metric) {
