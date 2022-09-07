@@ -8,8 +8,9 @@ import (
 type MetricMessage map[string]Metric
 
 type Metric struct {
-	Value string
-	Unit  string
+	Value    string
+	Unit     string
+	Absolute bool // If true, the value is absolute and not a delta
 }
 
 type MetricCollector interface {

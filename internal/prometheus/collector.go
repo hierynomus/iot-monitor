@@ -7,6 +7,7 @@ import (
 
 	"github.com/hierynomus/iot-monitor/pkg/iot"
 	"github.com/hierynomus/iot-monitor/pkg/logging"
+	iotprom "github.com/hierynomus/iot-monitor/pkg/prometheus"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -48,6 +49,12 @@ func (c *Collector) Update(msg iot.MetricMessage) {
 			switch m := metric.(type) {
 			case prometheus.Gauge:
 				m.Set(fl)
+			case iotprom.SettableCounter:
+				if v.Absolute {
+					m.Set(fl)
+				} else {
+					m.Add(fl)
+				}
 			case prometheus.Counter:
 				m.Add(fl)
 			default:
