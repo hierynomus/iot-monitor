@@ -16,7 +16,7 @@ const (
 	VerboseFlagShort = "v"
 )
 
-func RootCommand(cfg interface{}, name, description string) *cobra.Command {
+func RootCommand(cfg interface{}, name, description string, binder *autobind.Autobinder, vp *viper.Viper) *cobra.Command {
 	var verbosity int
 
 	cmd := &cobra.Command{
@@ -37,12 +37,6 @@ func RootCommand(cfg interface{}, name, description string) *cobra.Command {
 				zerolog.SetGlobalLevel(zerolog.TraceLevel)
 			}
 
-			vp := viper.New()
-			vp.SetConfigName("config")
-			vp.AddConfigPath(".")
-			vp.AddConfigPath(fmt.Sprintf("/etc/%s", name))
-			vp.SetConfigType("yaml")
-
 			logger := log.Ctx(cmd.Context())
 
 			if err := vp.ReadInConfig(); err != nil {
@@ -53,14 +47,6 @@ func RootCommand(cfg interface{}, name, description string) *cobra.Command {
 					fmt.Printf("%s", err)
 					os.Exit(1)
 				}
-			}
-
-			binder := &autobind.Autobinder{
-				UseNesting:   true,
-				EnvPrefix:    "IOT",
-				ConfigObject: cfg,
-				Viper:        vp,
-				SetDefaults:  true,
 			}
 
 			binder.Bind(cmd.Context(), cmd, []string{})
